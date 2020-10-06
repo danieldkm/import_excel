@@ -1,9 +1,9 @@
 [{
   "type": "oracle",
-  "host": "172.16.136.245",
+  "host": "x",
   "port": 1521,
-  "username": "unopar",
-  "password": "sbpsnpr",
-  "sid": "DBCOL03",
+  "username": "x",
+  "password": "x",
+  "sid": "x",
   "entities": ["./src/modules/**/infra/typeorm/entities/*.ts"]
 }]
