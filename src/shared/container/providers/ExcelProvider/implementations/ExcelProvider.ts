@@ -1,23 +1,67 @@
-import Excel, { Worksheet, WorksheetModel, WorkbookModel } from 'exceljs';
+import Excel, { Worksheet, Column } from 'exceljs';
 import fs from 'fs';
+import { Response } from 'express';
 
 import IExcelProvider from '../models/IExcelProvider';
 import IReadParamsExcel from '../dtos/IReadParamsExcel';
+import IWriteParamsExcel from '../dtos/IWriteParamsExcel';
 
-// import IWorkBookDTO from '../dtos/IWorkBookDTO';
-// import IWorksheetDTO from '../dtos/IWorksheetDTO';
+import TransformRelScheduler, { IField } from '../utils/TransformRelScheduler';
+const transformRelScheduler = new TransformRelScheduler();
 
 export interface models {
-  WorksheetModel: WorksheetModel;
-  WorkbookModel: WorkbookModel;
+  Worksheet: Worksheet;
+  Column: Column;
 }
 
 export default class ExcelProvider implements IExcelProvider {
+  transformProperties(data: any): IField[] {
+    const fields = Object.getOwnPropertyNames(data).map(property => {
+      return transformRelScheduler.execute(property, 'excel');
+    });
+    return fields;
+  }
+
+  async write({
+    columns,
+    data,
+    filename,
+    response,
+    worksheet_name,
+  }: IWriteParamsExcel): Promise<Response | undefined> {
+    const workbook = new Excel.Workbook();
+    const worksheet = workbook.addWorksheet(worksheet_name);
+
+    worksheet.columns = columns;
+
+    // Add Array Rows
+    worksheet.addRows(data);
+
+    response.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    response.setHeader(
+      'Content-Disposition',
+      'attachment; filename=' + filename,
+    );
+
+    await workbook.xlsx.write(response);
+
+    return response;
+    // .then(function () {
+    // })
+    // .catch(e => {
+    //   console.log('error.excel.write', e);
+    //   return undefined;
+    // });
+  }
+
   public async read({
     file,
     from,
     worksheet,
-  }: IReadParamsExcel): Promise<Worksheet | Worksheet[] | undefined> {
+  }: IReadParamsExcel): Promise<Worksheet | undefined> {
     const workbook = new Excel.Workbook();
     let datas;
 
@@ -37,8 +81,9 @@ export default class ExcelProvider implements IExcelProvider {
       );
       return work;
     }
+    return undefined;
 
-    const works: Worksheet[] | undefined = datas?.worksheets;
-    return works;
+    // const works: Worksheet[] | undefined = datas?.worksheets;
+    // return works;
   }
 }

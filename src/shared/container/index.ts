@@ -5,36 +5,9 @@ import './providers';
 
 import ILogsRepository from '@modules/hits/repositories/ILogsRepository';
 import LogsRepository from '@modules/hits/infra/typeorm/repositories/LogsRepository';
-// import IAppointmentRepository from '@modules/appointments/repositories/IAppointmentsRepository';
-// import AppointmentRepository from '@modules/appointments/infra/typeorm/repositories/AppointmentsRepository';
 
-// import IUsersRepository from '@modules/users/repositories/IUsersRepository';
-// import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
-
-// import IUserTokensRepository from '@modules/users/repositories/IUserTokensRepository';
-// import UserTokensRepository from '@modules/users/infra/typeorm/repositories/UserTokensRepository';
-
-// import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
-// import NotificationsRepository from '@modules/notifications/infra/repositories/NotificationsRepository';
+import IHitsRepository from '@modules/hits/repositories/IHitsRepository';
+import HitsRepository from '@modules/hits/infra/typeorm/repositories/HitsRepository';
 
 container.registerSingleton<ILogsRepository>('LogsRepository', LogsRepository);
-
-// container.registerSingleton<IAppointmentRepository>(
-//   'AppointmentsRepository',
-//   AppointmentRepository,
-// );
-
-// container.registerSingleton<IUsersRepository>(
-//   'UsersRepository',
-//   UsersRepository,
-// );
-
-// container.registerSingleton<IUserTokensRepository>(
-//   'UserTokensRepository',
-//   UserTokensRepository,
-// );
-
-// container.registerSingleton<INotificationsRepository>(
-//   'NotificationsRepository',
-//   NotificationsRepository,
-// );
+container.registerSingleton<IHitsRepository>('HitsRepository', HitsRepository);
